@@ -29,7 +29,7 @@
 <meta property="og:description" content="前置设定（固定所有地址，全程用这套数字） 🏠 家庭内网网段：192.168.1.0&#x2F;24，网关 192.168.1.1 📱 手机：内网 IP 192.168.1.100，MAC &#x3D; M_PHONE: 00:11:22:AA:BB:CC，源端口 50001 🛜 家用路由器（R_HOME） 内网 LAN 口：IP 192.168.1.1，MAC &#x3D; M_R_LAN: 00:1">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-15T08:52:59.390Z">
-<meta property="article:modified_time" content="2026-10-19T02:45:21.900Z">
+<meta property="article:modified_time" content="2026-10-19T07:00:47.402Z">
 <meta property="article:author" content="jj977">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -415,7 +415,7 @@
 <li>规则：IP 包头全程源 IP &#x2F; 目的 IP，<strong>只有 R_HOME 会修改（NAT）</strong>；每经过一段二层链路，以太网帧的 MAC 全部重写</li>
 <li>互联网骨干里的交换机：只是二层转发，只改 MAC，不修改 IP 头</li>
 </ul>
-<h1 id="【去程：手机-→-抖音】完整分步"><a href="#【去程：手机-→-抖音】完整分步" class="headerlink" title="【去程：手机 → 抖音】完整分步"></a>【去程：手机 → 抖音】完整分步</h1><h2 id="步骤-1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）"><a href="#步骤-1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）" class="headerlink" title="步骤 1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）"></a>步骤 1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）</h2><p>手机要访问抖音 <code>180.163.26.39:443</code><br>判断目标 IP 不在<code>192.168.1.0/24</code>网段 → 发给网关<code>192.168.1.1</code><br>ARP 已经提前查到网关 IP 对应的 MAC：<code>00:11:22:11:11:11</code></p>
+<h1 id="去程：手机-→-抖音-完整分步"><a href="#去程：手机-→-抖音-完整分步" class="headerlink" title="[去程：手机 → 抖音] 完整分步"></a>[去程：手机 → 抖音] 完整分步</h1><h2 id="步骤-1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）"><a href="#步骤-1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）" class="headerlink" title="步骤 1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）"></a>步骤 1：手机生成数据包，封装以太网帧（手机→家用路由器内网口，家庭局域网）</h2><p>手机要访问抖音 <code>180.163.26.39:443</code><br>判断目标 IP 不在<code>192.168.1.0/24</code>网段 → 发给网关<code>192.168.1.1</code><br>ARP 已经提前查到网关 IP 对应的 MAC：<code>00:11:22:11:11:11</code></p>
 <ul>
 <li>三层 IP 包头<ul>
 <li>源 IP：<code>192.168.1.100</code>｜目的 IP：<code>180.163.26.39</code></li>
@@ -442,7 +442,7 @@
 </ul>
 <p>数据包发给运营商路由器 R1</p>
 <h2 id="步骤-3：公共路由器-R1-收到包，解二层，路由转发，重写二层帧"><a href="#步骤-3：公共路由器-R1-收到包，解二层，路由转发，重写二层帧" class="headerlink" title="步骤 3：公共路由器 R1 收到包，解二层，路由转发，重写二层帧"></a>步骤 3：公共路由器 R1 收到包，解二层，路由转发，重写二层帧</h2><p>R1 拆掉二层帧，读取 IP 头：源<code>123.45.67.89</code>，目的<code>180.163.26.39</code><br>查路由表，下一跳是 R2（<code>203.0.113.2</code>）</p>
-<p>✅ IP 包头【完全不变】，NAT 只在家用路由器做！公网路由器不改 IP</p>
+<p>✅ IP 包头<strong>完全不变</strong>，NAT 只在家用路由器做！公网路由器不改 IP</p>
 <ul>
 <li>源 IP：<code>123.45.67.89</code>｜目的 IP：<code>180.163.26.39</code></li>
 </ul>
@@ -459,7 +459,7 @@
 <li>目的 MAC：<code>00:11:22:55:55:55</code>（抖音服务器 MAC）</li>
 </ul>
 <p>数据包送达抖音服务器。抖音服务器拆包，读取请求内容。</p>
-<h1 id="【回程：抖音-→-手机】完整分步"><a href="#【回程：抖音-→-手机】完整分步" class="headerlink" title="【回程：抖音 → 手机】完整分步"></a>【回程：抖音 → 手机】完整分步</h1><blockquote>
+<h1 id="回程：抖音-→-手机-完整分步"><a href="#回程：抖音-→-手机-完整分步" class="headerlink" title="[回程：抖音 → 手机] 完整分步"></a>[回程：抖音 → 手机] 完整分步</h1><blockquote>
 <p>核心前提：抖音收到请求后，构造响应包。抖音只看到<strong>公网地址</strong> <code>123.45.67.89:61001</code>，不知道手机内网地址。回程同样：<strong>公网路由器不改 IP，只换 MAC；只有家用路由器 R_HOME 做 NAT 反向转换</strong></p>
 </blockquote>
 <h2 id="步骤-5：抖音服务器封装响应包，发给-R2"><a href="#步骤-5：抖音服务器封装响应包，发给-R2" class="headerlink" title="步骤 5：抖音服务器封装响应包，发给 R2"></a>步骤 5：抖音服务器封装响应包，发给 R2</h2><p>抖音构建响应 IP 包，源目 IP、端口和去程反过来</p>
